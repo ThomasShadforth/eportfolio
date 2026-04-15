@@ -291,6 +291,18 @@ footer p{
 	background-color: #ccc;
 }
 
+.collapsible:after{
+	content: '\02795';
+	font-size: 13px;
+	color: black;
+	float: right;
+	margin-left: 5px;
+}
+
+.active:after {
+	content: '\2796';
+}
+
 .content {
 	padding: 0 18px;
 	max-height: 0;
