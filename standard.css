@@ -139,6 +139,7 @@ section
 	border: solid;
 	border-width: 2px;
 	border-color: black;
+	border-radius: 25px;
 	padding: 10px;
 	overflow: auto;
 }
