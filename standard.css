@@ -94,6 +94,7 @@ nav
 	font-size: 14pt;
 	border: solid;
 	border-width: 2px;
+	border-radius: 25px;
 	border-color: black;
 }
 nav a{
@@ -136,6 +137,7 @@ section
 	font-family: "Cooper black", sans-serif;
 	border: solid;
 	border-width: 2px;
+	border-radius: 25px
 	border-color: black;
 	padding: 10px;
 	overflow: auto;
@@ -171,6 +173,7 @@ footer
 	top: 91%;
 	border: solid;
 	border-width: 2px;
+	border-radius: 25px;
 	border-color: black;
 }
 footer h1{
