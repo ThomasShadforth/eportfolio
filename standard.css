@@ -67,6 +67,7 @@ header
 	top: 2%;
 	border: solid;
 	border-width: 2px;
+	border-radius: 25px;
 	border-color: black;
 	background-size: 81.5% 100%;
 }
