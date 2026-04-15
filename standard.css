@@ -309,7 +309,7 @@ footer p{
 
 .content {
 	padding: 0 18px;
-	width: 85%;
+	width: 87.5%;
 	max-height: 0;
 	overflow: hidden;
 	transition: max-height 0.2s ease-out;
