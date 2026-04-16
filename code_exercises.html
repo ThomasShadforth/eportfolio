@@ -25,7 +25,21 @@
           <p>Lorem ipsum dolor sit amet</p>
           <pre>
             <code>
-              insert code here
+              class Vehicle:
+                def __init__(self, brand: str, fuel_type: str) -> None:
+                    self.brand = brand
+                    self.fuel_type = fuel_type
+
+              class Car(Vehicle):
+                def __init__(self, brand: str, fuel_type: str, num_doors: int) -> None:
+                    self.num_doors = num_doors
+                    super().__init__(brand, fuel_type)
+
+              porsche = Car("Porsche", "Diesel", 2)
+
+              print(porsche.brand)
+              print(porsche.fuel_type)
+              print(porsche.num_doors)
             </code>
           </pre>
         </div>
