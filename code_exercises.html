@@ -48,7 +48,41 @@
           <p>Lorem ipsum dolor sit amet</p>
           <pre>
             <code>
-              insert code here
+              from abc import ABC, abstractmethod
+              import math
+
+              class Shape(ABC):
+                  @abstractmethod
+                  def area(self) -> float:
+
+                    pass
+
+              class Circle(Shape):
+                  def __init__(self, radius) -> None:
+                      self.radius = radius
+
+                  def area(self) -> float:
+  
+                      return math.pi * (self.radius ** 2)
+
+              class Rectangle(Shape):
+
+                  def __init__(self, length, width) -> None:
+                      self.length = length
+
+                      self.width = width
+
+                  def area(self) -> float:
+
+                      return self.length * self.width
+
+              circ1 = Circle(4.5)
+
+              print(circ1.area())
+
+              rect1 = rectangle(4, 6)
+
+              print(rect1.area())
             </code>
           </pre>
         </div>
@@ -57,7 +91,33 @@
           <p>Lorem ipsum dolor sit amet</p>
           <pre>
             <code>
-              insert code here
+              class BankAccount:
+                  def __init__(self, balance) -> None:
+                      self.__balance = balance
+
+                  def deposit(self, amount: float) -> None:
+                      self.__balance += amount
+                      print("£" + str(amount) + " has been deposited in account!")
+
+                  def withdraw(self, amount: float) -> None:
+                      fundsCheck = self.__balance - amount
+
+                      if fundsCheck >= 0:
+                          self.__balance -= amount
+                          print("£" + str(amount) + " has been withdrawn from account!")
+                      else:
+                          print("INSUFFICIENT FUNDS")
+                  
+                  def balancecheck(self) -> float:
+
+                      return self.__balance
+              
+              acc1 = BankAccount(200)
+
+              acc1.deposit(35.50)
+              acc1.withdraw(104.25)
+
+              print("Account Balance is: £" + str(acc1.balancecheck())
             </code>
           </pre>
         </div>
@@ -66,7 +126,28 @@
           <p>Lorem ipsum dolor sit amet</p>
           <pre>
             <code>
-              insert code here
+              from abc import ABC, abstractmethod
+
+              class Animal(ABC):
+                  @abstractmethod
+                  def make_sound(self) -> str:
+                      pass
+
+              class Dog(Animal):
+
+                  def make_sound(self) -> str:
+                      return "Woof!"
+
+              class Cat(Animal):
+
+                  def make_sound(self) -> str:
+                      return "Meow!"
+
+              tabby = Cat()
+              print(tabby.make_sound())
+
+              husky = Dog()
+              print(husky.make_sound())
             </code>
           </pre>
         </div>
@@ -75,7 +156,16 @@
           <p>Lorem ipsum dolor sit amet</p>
           <pre>
             <code>
-              insert code here
+              class Person:
+                  def __init__(self, name: str) -> None:
+                      self.__name = name
+
+                  def __del__(self) -> None:
+
+                      print(f"Goodbye, {self.__name}!")
+
+              tom = Person("Tom")
+              del(tom)
             </code>
           </pre>
         </div>
