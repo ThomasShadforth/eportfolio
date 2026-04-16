@@ -338,6 +338,7 @@ footer p{
 
 .staticContent {
 	padding: 0 18px;
+	width: 87.5%;
 	display: none;
 	overflow: hidden;
 	background-color: #f1f1f1;
