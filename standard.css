@@ -303,10 +303,6 @@ footer p{
 	margin-left: 5px;
 }
 
-.active:after {
-	content: '\2796';
-}
-
 .staticCollapsible {
 	background-color: #eee;
 	color: #444
@@ -345,6 +341,10 @@ footer p{
 	display: none;
 	overflow: hidden;
 	background-color: #f1f1f1;
+}
+
+.active:after {
+	content: '\2796';
 }
 
 code{
