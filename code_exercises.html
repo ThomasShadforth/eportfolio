@@ -170,6 +170,83 @@
           </pre>
         </div>
       </div>
+      <button type="button" class"staticCollapsible">Unit 2</button>
+      <div class="staticContent">
+        <p>Designing a Real World Application with SOLID Design Principles</p>
+        <pre>
+          <code>
+            from abc import ABC, abstractmethod
+
+            #Define abstract class for payment method
+            class PaymentMethod(ABC):
+                #define abstract method "pay"
+                @abstractmethod
+                def pay(self) -> None:
+                    pass
+
+            class ShoppingItem():
+                def __init__(self, name: str, price: float) -> None:
+                    self.name = name
+                    self.price = price
+
+            # Define concrete implementations of the abstract paymentmethod class
+            class CreditCard(PaymentMethod):
+
+                def pay(self) -> None:
+                    print("Processing Credit Card Payment...")
+
+            class PayPal(PaymentMethod):
+
+                def pay(self) -> None:
+                    print("Processing PayPal Payment...")
+
+            class CryptoMethod(PaymentMethod):
+
+                def pay(self) -> None:
+                    print("Processing Crypto-Currency Payment...")
+
+            class PaymentProcessor:
+
+                def pay(self, payment_type: PaymentMethod) -> None:
+                    payment_type.pay()
+
+            class Order:
+                #Separated Order into Order and PaymentProcessor
+                def __init__(self) -> None:
+                    self.items = []
+
+                def add_item(self, item: ShoppingItem) -> None:
+                    self.items.append(item)
+
+                def calculate_total(self) -> float:
+
+                    return sum(item.price for item in self.items)
+
+            # Create instance of creditcard, and instance of paymentprocessor
+            my_payment_method = CreditCard()
+            pay_processor = PaymentProcessor()
+
+            # Define a set of shoppingitem instances
+            apple = ShoppingItem("Apple", 0.55)
+            orange = ShoppingItem("orange", 0.73)
+            cereal = ShoppingItem("cereal", 1.55)
+
+            # Create a new order
+            new_order = Order()
+
+            # Add Shopping Items
+            new_order.add_item(apple)
+            new_order.add_item(orange)
+            new_order.add_item(cereal)
+
+            # Calculate Total Cost of Shopping Order
+            print("Total cost of shopping is: £" + str(new_order.calculate_total()))
+
+            # Pay using the established payment method
+            pay_processor.pay(my_payment_method)
+          </code>
+        </pre>
+      </div>
       <script src="src/javascript/animated_collapsible.js"></script>
       <script src="src/javascript/static_collapsible.js"></script>
     </section>
