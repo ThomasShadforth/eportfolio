@@ -19,7 +19,29 @@
       <h1>Artefacts</h1>
       <button class="collapsible">Basic Class Hierarchy</button>
       <div class="content">
-        <p style="color:black;">Insert Code Here, just testing collapsibles in JS for now.</p>
+        <p style="color:black;">This first exercise focused on Inheritance, a key concept in Object-Oriented Programming</p>
+        <code>class Vehicle: <br>
+<br>
+              def __init__(self, brand: str, fuel_type: str) -> None:<br>
+              <br>
+                    self.brand = brand <br>
+                    self.fuel_type = fuel_type <br>
+<br>
+<br>
+class Car(Vehicle):<br>
+<br>
+    def __init__(self, brand: str, fuel_type: str, num_doors: int) -> None:<br>
+<br>
+        self.num_doors = num_doors
+
+        super().__init__(brand, fuel_type)
+
+
+porsche = Car("Porsche", "Diesel", 2)
+
+print(porsche.brand)
+print(porsche.fuel_type)
+print(porsche.num_doors)</code>
       </div>
       <script src="src/javascript/collapsible.js"></script>
     </section>
