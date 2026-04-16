@@ -18,8 +18,8 @@ a:active
 body
 {
 	font-family: Verdana, Arial, Helvetica,sans-serif;
-	background-color:#fff;
-	color:#fff;
+	background-color:#000;
+	color:#000;
 }
 
 h1, h2, h3, h4, h5, h6
@@ -157,7 +157,7 @@ section h2{
 }
 section p{
 	font-family: "Calibri", sans-serif;
-	color: #fff;
+	color: #000;
 	font-size: 14pt;
 }
 section li{
@@ -180,13 +180,13 @@ footer
 footer h1{
 	font-family: "Cooper black", sans-serif;
 	font-size: 14pt;
-	color: #fff;
+	color: #000;
 	padding: 10px;
 }
 footer p{
 	font-family: Calibri, sans-serif;
 	font-size: 10pt;
-	color: #fff;
+	color: #000;
 	overflow: auto;
 	text-align: center;
 }
@@ -314,4 +314,9 @@ footer p{
 	overflow: hidden;
 	transition: max-height 0.2s ease-out;
 	background-color: #f1f1f1;
+}
+
+code{
+	font-family: monospace;
+	color: black;
 }
