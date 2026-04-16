@@ -247,6 +247,66 @@
           </code>
         </pre>
       </div>
+      <button type="button" class="staticCollapsible">Unit 3</button>
+      <div class="staticContent">
+        <p>Implementing the Factory Pattern</p>
+        <pre>
+          <code>
+            from abc import ABC, abstractmethod
+
+            class Car(ABC):
+
+                @abstractmethod
+                def drive(self) -> None:
+                    pass
+
+            class Sedan(Car):
+
+                def drive(self) -> None:
+                    print("Driving a Sedan")
+
+            class SUV(Car):
+                def drive(self) -> None:
+                    print("Driving an SUV")
+
+            class Hatchback(Car):
+                def drive(self) -> None:
+                    print("Driving a Hatchback")
+
+            class CarFactory(ABC):
+                @abstractmethod
+                def create_car(self) -> Car:
+                    pass
+
+            class SedanFactory(CarFactory):
+                def create_car(self) -> Car:
+                    return Sedan()
+
+            class SUVFactory(CarFactory):
+                def create_car(self) -> Car:
+                    return SUV()
+
+            class HatchbackFactory(CarFactory):
+                def create_car(self) -> Car:
+                    return Hatchback()
+
+            def client_code(car_factory : CarFactory) -> None:
+                car = car_factory.create_car()
+                car.drive()
+
+            if __name__ == '__main__':
+                print("Creating car using Sedan Factory")
+                client_code(SedanFactory())
+
+                print("Creating car using SUV Factory")
+                client_code(SUVFactory())
+
+                print("Creating car using Hatchback Factory")
+                client_code(HatchbackFactory())
+            
+          </code>
+        </pre>
+      </div>
       <script src="src/javascript/animated_collapsible.js"></script>
       <script src="src/javascript/static_collapsible.js"></script>
     </section>
