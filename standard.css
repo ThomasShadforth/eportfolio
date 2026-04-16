@@ -279,7 +279,7 @@ footer p{
 	text-align: center;
 }
 
-.collapsible {
+.animatedCollapsible {
 	background-color: #eee;
 	color: #444
 	cursor: pointer;
@@ -291,11 +291,11 @@ footer p{
 	font-size: 15px
 }
 
-.active, .collapsible:hover {
+.active, .animatedCollapsible:hover {
 	background-color: #ccc;
 }
 
-.collapsible:after{
+.animatedCollapsible:after{
 	content: '\02795';
 	font-size: 13px;
 	color: black;
@@ -314,30 +314,6 @@ footer p{
 	overflow: hidden;
 	transition: max-height 0.2s ease-out;
 	background-color: #f1f1f1;
-}
-
-.nestedCollapsible{
-	background-color: #eee;
-	color: #444
-	cursor: pointer;
-	padding: 18px;
-	width: 90%;
-	border: none;
-	text-align: left;
-	outline: none;
-	font-size: 15px
-}
-
-.active, .nestedCollapsible:hover {
-	background-color: #ccc;
-}
-
-.nestedCollapsible:after{
-	content: '\02795';
-	font-size: 13px;
-	color: black;
-	float: right;
-	margin-left: 5px;
 }
 
 code{
