@@ -307,6 +307,319 @@
           </code>
         </pre>
       </div>
+      <button type="button" class="staticCollapsible">Unit 6</button>
+      <div class="staticContent">
+        <p>Individual Coding Exercise</p>
+        <button type="button" class="staticCollapsible">Main Code</button>
+        <div class="staticContent">
+          <pre>
+            <code>
+              import threading
+              from concurrent.futures import ThreadPoolExecutor
+
+              class BankAccount:
+                  def __init__(self, account_number, balance, is_safe=True) -> None:
+                      self.account_number = account_number
+                      self.__balance = balance
+                      self.lock = threading.Lock()
+                      self.__is_safe = is_safe
+
+                  def deposit(self, amount: float) -> None:
+                      if self.__is_safe:
+                          with self.lock:
+                              self.__balance = self.__balance + amount
+                      else:
+                          self.__balance = self.__balance + amount
+                  
+                  def withdraw(self, withdraw_amount: float) -> None:
+                      if self.__is_safe:
+                          with self.lock:
+                              balance_after_withdraw = self.__balance - withdraw_amount
+
+                          if 0.0 > balance_after_withdraw:
+                              print("INSUFFICIENT FUNDS AVAILABLE, CANNOT WITHDRAW: £" + str(withdraw_amount))
+                          else:
+                              self.__balance = balance_after_withdraw
+                      else:
+                          balance_after_withdraw = self.__balance - withdraw_amount
+
+                          if 0.0 > balance_after_withdraw:
+                              print("INSUFFICIENT FUNDS AVAILABLE, CANNOT WITHDRAW: £" + str(withdraw_amount))
+                          else:
+                              self.__balance = balance_after_withdraw
+                  def print_balance(self) -> None:
+                      if self.__is_safe:
+                          with self.lock:
+                              print("Current balance: £" + str(self.__balance))
+                      else:
+                          print("Current balance: £" + str(self.__balance))
+              
+                  def get_balance(self) -> float:
+                      if self.__is_safe:
+                          with self.lock:
+                              return self.__balance
+                      else:
+                          return self.__balance
+
+              class TransactionSimulator:
+
+                  # Upon initialisation, assign passed bankaccount objects to member variables, and create a lock
+                  def __init__(self, bank_account_1: BankAccount, bank_account_2: BankAccount, is_safe = True) -> None:
+                      self.bank_account_1 = bank_account_1
+                      self.bank_account_2 = bank_account_2
+                      self.lock = threading.Lock()
+                      # __is_safe is for testing purposes, will remain true by default
+                      # if a transactionsimulator object has this marked as false, thread safety will not be applied
+                      self.__is_safe = is_safe
+              
+                  # Perform multiple deposits and withdrawals in sequence. While defined as floats, TPEs will allow for iterables containing matching data types to be passed into this method
+                  def SimulateDepositWithdraw(self, first_deposit_amount, first_withdrawal_amount, second_deposit_amount, second_withdrawal_amount) -> None:
+                      if self.__is_safe:
+                          with self.lock:
+                              self.bank_account_1.deposit(first_deposit_amount)
+                              self.bank_account_1.withdraw(first_withdrawal_amount)
+                              self.bank_account_1.deposit(second_deposit_amount)
+                              self.bank_account_1.withdraw(second_withdrawal_amount)
+                      else:
+                          self.bank_account_1.deposit(first_deposit_amount)
+                          self.bank_account_1.withdraw(first_withdrawal_amount)
+                          self.bank_account_1.deposit(second_deposit_amount)
+                          self.bank_account_1.withdraw(second_withdrawal_amount)
+              
+                  # Transfer money between two accounts
+                  def SimulateBankTransfer(self, sender_account, recipient_account, transfer_amount) -> None:
+                      if self.__is_safe:
+                          with self.lock:
+                              sender_account.withdraw(transfer_amount)
+                              recipient_account.deposit(transfer_amount)
+                              print("Successfully transferred £" + str(transfer_amount) + " from account " + str(sender_account.account_number) + " to account " + str(recipient_account.account_number))
+                      else:
+                          sender_account.withdraw(transfer_amount)
+                          recipient_account.deposit(transfer_amount)
+                          print("Successfully transferred £" + str(transfer_amount) + " from account " + str(sender_account.account_number) + " to account " + str(recipient_account.account_number))
+              
+                  # Simulate a single deposit
+                  def SimulateDeposit(self, deposit_amount) -> None:
+                      if self.__is_safe:
+                          with self.lock:
+                              self.bank_account_1.deposit(deposit_amount)
+                      else:
+                          self.bank_account_1.deposit(deposit_amount)
+              
+                  # Simulate a single withdrawal
+                  def SimulateWithdrawal(self, withdrawal_amount) -> None:
+                      if self.__is_safe:
+                          with self.lock:
+                              self.bank_account_2.withdraw(withdrawal_amount)
+                      else:
+                          self.bank_account_2.withdraw(withdrawal_amount)
+              
+              # Will only run this code if this module is not being accessed outside of this file. E.g. will not run in the unittest file
+              if __name__ == '__main__':
+                  # Initialise the transaction simulator, passing in initialisation arguments for the two BankAccount objects (account_number: 12231253, balance: 300), (account_number: 32245799, balance: 1000)
+                  transactSim = TransactionSimulator(BankAccount(12231253, 300), BankAccount(32245799, 1000))
+              
+                  # Initialise arrays for first deposit, second deposit, first withdrawal and second withdrawal amounts for use with thread pool executor
+                  first_deposit_amounts = [30.51, 2.56, 90.32]
+                  second_deposit_amounts = [300.21, 600.11, 425.77]
+                  first_withdrawal_amounts = [99.12, 467.18, 1000.33]
+                  second_withdrawal_amounts = [322.01, 3.12, 9.43]
+              
+                  # Initialise empty array called result, which will be used to store the output from the ThreadPoolExecutor call of the depositwithdraw method (And also the bank transfer method
+                  result=[]
+              
+                  print("Simulating concurrent transactions on single account...")
+              
+                  # use thread pool executor to run concurrent calls of the transaction simulator's SimulateDepositWithdraw method
+                  with ThreadPoolExecutor(max_workers=3) as executor:
+                      # Pass in the defined arrays as parameters when mapping the function to threads, will determine the value used based on the thread.
+                      result = executor.map(transactSim.SimulateDepositWithdraw, first_deposit_amounts, first_withdrawal_amounts, second_deposit_amounts, second_withdrawal_amounts)
+                  for r in result:
+                      # Iterate through result array and print output of ThreadPoolExecutor
+                      if r != None:
+                          print(r)
+              
+                  print("Simulating transfer between two bank accounts...")
+              
+                  # use thread pool executor to run concurrent calls of the transaction simulator's SimulateBankTransfer method
+                  # Pass in the bank accounts as both a sender and recipient dependent on the thread in order to check for deadlocks
+                  with ThreadPoolExecutor(max_workers=2) as executor:
+                      result = executor.map(transactSim.SimulateBankTransfer, [transactSim.bank_account_1, transactSim.bank_account_2], [transactSim.bank_account_2, transactSim.bank_account_1], [300.20, 400])
+                  for r in result:
+                      if r != None:
+                          print(r)
+            </code>
+          </pre>
+        </div>
+        <button type="button" class="staticCollapsible">Unit Test Code</button>
+        <div class="staticContent">
+          <pre>
+            <code>
+              import AOODP_Individual_Coding_Exercise as CodeExercise
+              from concurrent.futures import ThreadPoolExecutor
+              import itertools
+              import time
+              import unittest
+              
+              
+              # Define test case class extending from the unittest library
+              class TestCodingExercise(unittest.TestCase):
+              
+                  # Used to test the transaction simulator's simulate deposit withdraw
+                  def test_SimulateDepositWithdraw(self):
+              
+                      print("\n Testing Deposit and Withdrawal Simulation")
+              
+                      # Record method start time
+                      start = time.time()
+              
+                      # Initialise transactionsimulator object
+                      transactSimTest = CodeExercise.TransactionSimulator(CodeExercise.BankAccount(12231253, 300), CodeExercise.BankAccount(32245799, 1000))
+              
+                      # Initialise arrays of values for use with thread pool executor
+                      first_deposit_amounts = [30.51, 2.56, 90.32]
+                      second_deposit_amounts = [300.21, 600.11, 425.77]
+                      first_withdrawal_amounts = [99.12, 467.18, 1000.33]
+                      second_withdrawal_amounts = [322.01, 3.12, 9.43]
+              
+                      # Define thread pool executor, map the simulation method and pass in the arrays to provide their values dependent on the thread
+                      with ThreadPoolExecutor(max_workers=3) as executor:
+                          executor.map(transactSimTest.SimulateDepositWithdraw, first_deposit_amounts, first_withdrawal_amounts, second_deposit_amounts, second_withdrawal_amounts)
+              
+                      # Assert whether balance is equal to the expected value
+                      self.assertEqual(transactSimTest.bank_account_1.get_balance(), 1315.8)
+              
+                      # Measure execution time
+                      end = time.time()
+                      print("Test Execution Time: " + str(end - start) + " seconds")
+                      print("Expected Result: £" + str(1315.8) + ", Actual Result: £" + str(transactSimTest.bank_account_1.get_balance()))
+                      
+                  # Used to test the transaction simulator's bank transfer method
+                  def test_SimulateBankTransfer(self):
+              
+                      print("\n Testing Bank Withdrawal Simulation")
+              
+                      # Record method start time
+                      start = time.time()
+              
+                      # Initialise tranactionsimulator object
+                      transactSimTest = CodeExercise.TransactionSimulator(CodeExercise.BankAccount(12231253, 350), CodeExercise.BankAccount(32245799, 1000))
+              
+                      # Define thread pool executor, map the simulation method and pass in arrays defined with the simulator object's bank account variables to provide sender and recipient object based on the thread, as well as transfer values
+                      with ThreadPoolExecutor(max_workers=2) as executor:
+                          executor.map(transactSimTest.SimulateBankTransfer, [transactSimTest.bank_account_1, transactSimTest.bank_account_2], [transactSimTest.bank_account_2, transactSimTest.bank_account_1], [300.20, 400])
+              
+                      # Assert whether each account has these specified balances. If either fails, then the unittest fails
+                      self.assertEqual(transactSimTest.bank_account_1.get_balance(), 449.8)
+                      self.assertEqual(transactSimTest.bank_account_2.get_balance(), 900.2)
+              
+                      # Measure execution time
+                      end = time.time()
+                      print("Test Execution Time: " + str(end - start) + " seconds")
+                      print("Expected Results: £" + str(449.8) + " and £" + str(900.2) + ", Actual Result: £" + str(transactSimTest.bank_account_1.get_balance()) + " and £" + str(transactSimTest.bank_account_2.get_balance()))
+                      
+                  # Used to test repetitive deposits
+                  def test_RepetitiveDeposits(self):
+              
+                      print("\n Testing Repetitive Deposits")
+              
+                      # Record method start time
+                      start = time.time()
+              
+                      # Initialise transactionsimulator object
+                      transactSimTest = CodeExercise.TransactionSimulator(CodeExercise.BankAccount(12231253, 300), CodeExercise.BankAccount(32245799, 1000))
+              
+                      # Define thread pool executor, map the deposit method to 1000 workers and provide a value iterated 1000 times
+                      with ThreadPoolExecutor(max_workers=1000) as executor:
+                          executor.map(transactSimTest.bank_account_1.deposit, itertools.repeat(2.5, 1000))
+              
+                      # Assert whether the account's balance is equal to the expected value
+                      self.assertEqual(transactSimTest.bank_account_1.get_balance(), 2800)
+              
+                      # Measure execution time
+                      end = time.time()
+                      print("Test Execution Time: " + str(end - start) + " seconds")
+                      print("Expected Result: £" + str(2800) + ", Actual Result: £" + str(transactSimTest.bank_account_1.get_balance()))
+              
+              
+                  # Used to test repetitive withdrawals
+                  def test_RepetitiveWithdrawals(self):
+              
+                      print("\n Testing Repetitive Withdrawals")
+              
+                      # Record method start time
+                      start = time.time()
+              
+                      # Initialise transactionsimulator object
+                      transactSimTest = CodeExercise.TransactionSimulator(CodeExercise.BankAccount(12231253, 300), CodeExercise.BankAccount(32245799, 1000))
+              
+                      # Define thread pool executor, map the withdraw method to 2000 workers and provide a value iterated 500 times
+                      with ThreadPoolExecutor(max_workers=2000) as executor:
+                          executor.map(transactSimTest.bank_account_2.withdraw, itertools.repeat(1.5, 500))
+              
+                      # Assert whether the account's balance is equal to the expected value
+                      self.assertEqual(transactSimTest.bank_account_2.get_balance(), 250)
+              
+                      # Measure execution time
+                      end = time.time()
+                      print("Test Execution Time: " + str(end - start) + " seconds")
+                      print("Expected Result: £" + str(250) + ", Actual Result: £" + str(transactSimTest.bank_account_2.get_balance()))
+              
+                  def test_UnsafeAccountSimulateDepositWithdraw(self):
+              
+                      print("\n Testing Deposit and Withdrawal Simulation using non-thread safe accounts and Simulator")
+              
+                      # Record method start time
+                      start = time.time()
+              
+                      # Initialise transactionsimulator object
+                      transactSimTest = CodeExercise.TransactionSimulator(CodeExercise.BankAccount(12231253, 300, False), CodeExercise.BankAccount(32245799, 1000, False), False)
+              
+                      # Initialise arrays of values for use with thread pool executor
+                      first_deposit_amounts = [30.51, 2.56, 90.32]
+                      second_deposit_amounts = [300.21, 600.11, 425.77]
+                      first_withdrawal_amounts = [99.12, 467.18, 1000.33]
+                      second_withdrawal_amounts = [322.01, 3.12, 9.43]
+              
+                      # Define thread pool executor, map the simulation method and pass in the arrays to provide their values dependent on the thread
+                      with ThreadPoolExecutor(max_workers=3) as executor:
+                          executor.map(transactSimTest.SimulateDepositWithdraw, first_deposit_amounts, first_withdrawal_amounts, second_deposit_amounts, second_withdrawal_amounts)
+              
+                      # Assert whether balance is equal to the expected value
+                      self.assertNotEqual(transactSimTest.bank_account_1.get_balance(), 1315.8)
+              
+                      # Measure execution time
+                      end = time.time()
+                      print("Test Execution Time: " + str(end - start) + " seconds")
+                      print("Expected Result: £" + str(1315.8) + ", Actual Result: £" + str(transactSimTest.bank_account_1.get_balance()))
+              
+                  def test_UnsafeRepetitiveDeposits(self):
+                      print("\n Testing Deposit and Withdrawal Simulation using non-thread safe accounts and Simulator")
+              
+                      # Record method start time
+                      start = time.time()
+              
+                      # Initialise transactionsimulator object
+                      transactSimTest = CodeExercise.TransactionSimulator(CodeExercise.BankAccount(12231253, 300, False), CodeExercise.BankAccount(32245799, 1000, False), False)
+              
+                      with ThreadPoolExecutor(max_workers=1000) as executor:
+                          executor.map(transactSimTest.bank_account_1.deposit, itertools.repeat(2.5, 1000))
+              
+                      # Assert whether the account's balance is equal to the expected value
+                      self.assertNotEqual(transactSimTest.bank_account_1.get_balance(), 2800)
+              
+                      # Measure execution time
+                      end = time.time()
+                      print("Test Execution Time: " + str(end - start) + " seconds")
+                      print("Expected Result: £" + str(2800) + ", Actual Result: £" + str(transactSimTest.bank_account_1.get_balance()))
+                  
+              if __name__ == '__main__':
+                  try: unittest.main()
+                  except SystemExit: pass
+            </code>
+          </pre>
+        </div>
+      </div>
       <script src="src/javascript/animated_collapsible.js"></script>
       <script src="src/javascript/static_collapsible.js"></script>
     </section>
