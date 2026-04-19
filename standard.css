@@ -67,7 +67,7 @@ header
 	top: 2%;
 	border: solid;
 	border-width: 2px;
-	border-radius: 25px;
+	border-radius: 10px;
 	border-color: black;
 	background-size: 81.5% 100%;
 }
@@ -81,6 +81,7 @@ header h1{
 	font-family: "Cooper black", sans-serif;
 	font-size: 18pt;
 	padding-top: 73px;
+	padding-left: 20px;
 	position: absolute;
 }
 nav
@@ -95,7 +96,7 @@ nav
 	font-size: 14pt;
 	border: solid;
 	border-width: 2px;
-	border-radius: 25px;
+	border-radius: 10px;
 	border-color: black;
 }
 nav a{
@@ -139,7 +140,7 @@ section
 	border: solid;
 	border-width: 2px;
 	border-color: black;
-	border-radius: 25px;
+	border-radius: 10px;
 	padding: 10px;
 	overflow: auto;
 }
@@ -174,7 +175,7 @@ footer
 	top: 91%;
 	border: solid;
 	border-width: 2px;
-	border-radius: 25px;
+	border-radius: 10px;
 	border-color: black;
 }
 footer h1{
