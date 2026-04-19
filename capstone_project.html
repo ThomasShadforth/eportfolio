@@ -1,0 +1,221 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="standard.css">
+    <title>Capstone Project - AOODP</title>
+  </head>
+  <body>
+    <header>
+      <h1>Capstone Project</h1>
+    </header>
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="modules.html">Modules</a></li>
+      </ul>
+    </nav>
+    <section>
+      <pre>
+        <code>
+          import bcrypt
+          import secrets
+          import string
+          
+          class BankAccount:
+          
+              def __init__(self, initial_balance : float, account_id : str, hashed_pass : str) -> None:
+                  self.__balance = initial_balance
+                  self.account_id = account_id
+                  self.hashed_pass = hashed_pass
+          
+              def deposit(self, deposit_amount : float) -> None:
+                  self.__balance = self.__balance + deposit_amount
+          
+              def withdraw(self, withdrawal_amount : float) -> None:
+                  amount_after_withdrawal = self.__balance - withdrawal_amount
+          
+                  if amount_after_withdrawal <= 0:
+                      print("Failed to withdraw due to insufficient funds")
+                  else:
+                      self.__balance = amount_after_withdrawal
+          
+              def get_balance(self) -> float:
+                  return self.__balance
+          
+          class BankingProgram:
+          
+              def __init__(self) -> None:
+                  self.program_running = True
+                  self.account_data = {}
+                  self.received_account = None
+          
+              def register(self) -> None:
+          
+                  while True:
+                      ID_numbers = string.digits
+                      ID_numbers = str(ID_numbers)
+                      new_user_ID = ''.join(secrets.choice(ID_numbers) for i in range(8))
+          
+                      #Validate whether ID already exists in account database
+                      if not self.account_data.get(new_user_ID):
+                          # ID is unique, break loop
+                          break
+          
+                  print("Assigned user ID: " + new_user_ID)
+          
+                  initial_balance = 0.0
+          
+                  making_initial_deposit = False
+          
+                  while True:
+                      initial_balance_request = str(input("Would you like to make an initial deposit? Y/N")).lower()
+                      if initial_balance_request.startswith("y"):
+                          making_initial_deposit = True
+                          break
+                      elif initial_balance_request.startswith("n"):
+                          break
+          
+                  while making_initial_deposit:
+                      initial_balance = input("Please enter your initial balance: ")
+                      try:
+                          initial_balance = float(initial_balance)
+                      except ValueError:
+                          print("Please enter a valid balance")
+                          continue
+                      making_initial_deposit = False
+          
+                  password = ""
+          
+                  while True:
+                      password = str(input("Please enter your password: "))
+                      reentered_password = str(input("Please confirm your password: "))
+          
+                      if password != reentered_password:
+                          print("These passwords do not match! Please try again")
+                      else:
+                          break
+          
+                  password_bytes = password.encode('utf-8')
+                  salt = bcrypt.gensalt()
+                  hashed_pass = bcrypt.hashpw(password_bytes, salt)
+                  self.account_data[new_user_ID] = BankAccount(initial_balance, new_user_ID, hashed_pass.decode())
+                  
+              def manage_account_screen(self) -> None:
+          
+                  while True:
+                      print("\n========================")
+                      print("========================")
+                      print("===Account Management===")
+                      print("========================")
+                      print("========================")
+                      print("1. Deposit Funds")
+                      print("2. Withdraw Funds")
+                      print("3. Check Balance")
+                      print("4. Log Out")
+                      chosen_option = str(input("Please select from the following options: ")).lower()
+          
+                      if chosen_option.startswith("1") or chosen_option.startswith("d"):
+                          while True:
+                              deposit_amount = input("Please enter the amount you wish to deposit: ")
+                              try:
+                                  deposit_amount = float(deposit_amount)
+                                  break
+                              except ValueError:
+                                  print("Please enter a valid deposit amount")
+                                  continue
+                          self.received_account.deposit(deposit_amount)
+                      elif chosen_option.startswith("2") or chosen_option.startswith("w"):
+                          while True:
+                              withdrawal_amount = input("Please enter the amount you wish to withdraw: ")
+                              try:
+                                  withdrawal_amount = float(withdrawal_amount)
+                                  break
+                              except ValueError:
+                                  print("Please enter a valid withdrawal amount")
+                                  continue
+                          self.received_account.withdraw(withdrawal_amount)                
+                      elif chosen_option.startswith("3") or chosen_option.startswith("c"):
+                          print("Your current balance is: £" + str(self.received_account.get_balance()))                
+                      elif chosen_option.startswith("4") or chosen_option.startswith("l"):
+                          log_out_option = str(input("Are you sure you want to log out? Y/N: ")).lower()
+          
+                          if log_out_option.startswith("y"):
+                              self.received_account = None
+                              break
+                      else:
+                          print("Invalid option! Please try again")
+                  
+          
+              def login(self) -> None:
+          
+                  requested_ID = ""
+                  self.received_account = None
+                  while True:
+                      requested_ID = str(input("Please enter your account ID: "))
+          
+                      if len(requested_ID) != 8 or self.account_data.get(requested_ID) == None:
+                          print("Invalid Account ID entered!")
+                      else:
+                          self.received_account = self.account_data.get(requested_ID)
+                          break
+          
+                  while True:
+                      entered_password = str(input("Please enter your account password: "))
+                      password_bytes = entered_password.encode('utf-8')
+                      result = bcrypt.hashpw(password_bytes, self.received_account.hashed_pass.encode('utf-8')) == self.received_account.hashed_pass.encode('utf-8')
+          
+                      if result:
+                          print("LOG-IN SUCCESSFUL!")
+                          self.manage_account_screen()
+                          break
+                      else:
+                          print("LOG-IN UNSUCCESSFUL! PLEASE TRY AGAIN")
+                  pass
+          
+              def quit(self) -> None:
+                  isQuitting = True
+                  while isQuitting:
+                      response = input("Are you sure you want to quit? Y/N ")
+                      response = str(response).lower()
+                      if response.startswith("y"):
+                          isQuitting = False
+                          self.program_running = False
+                          pass
+                      elif response.startswith("n"):
+                          isQuitting = False
+          
+              def main(self) -> None:
+                  while self.program_running:
+                      print("\n=================================")
+                      print("=================================")
+                      print("===========Banking App===========")
+                      print("=================================")
+                      print("=================================")
+                      print("")
+                      print("1. Register Account")
+                      print("2. Account Log-in")
+                      print("3. Quit Program")
+                      response = input("Please Select from the following: ")
+                      response = str(response).lower()
+                      if response.startswith("r") or response.startswith("1"):
+                          self.register()
+                          pass
+                      elif response.startswith("l") or response.startswith("2"):
+                          self.login()
+                          pass
+                      elif response.startswith("q") or response.startswith("3"):
+                          self.quit()
+                          pass
+          
+              
+          
+          if __name__ == '__main__':
+          
+              bank_program = BankingProgram()
+              bank_program.main()
+        </code>
+      </pre>
+    </section>
+  </body>
+</html>
