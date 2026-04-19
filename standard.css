@@ -19,7 +19,7 @@ body
 {
 	font-family: Verdana, Arial, Helvetica,sans-serif;
 	background-color:#fff;
-	color:#000;
+	color:#1A1423;
 }
 
 h1, h2, h3, h4, h5, h6
@@ -28,7 +28,7 @@ h1, h2, h3, h4, h5, h6
 }
 h1
 {
-	color:#000;
+	color:#1A1423;
 	margin: 0;
 	padding: 0;
 	
@@ -59,7 +59,7 @@ header
 {
 	position: relative;
 	font-family: "Cooper black", sans-serif;
-	background-color: #ffe200;
+	background-color: #5C6F68;
 	position: absolute;
 	width: 94%;
 	height: 16%;
@@ -87,7 +87,7 @@ header h1{
 nav
 {
 	font-family: "Cooper black", sans-serif;
-	background-color: #fff185;
+	background-color: #5C6F68;
 	width: 94%;
 	height: 12%;
 	top: 20%;
@@ -132,7 +132,7 @@ nav li:first-child{
 section
 {
 	position: absolute;
-	background-color: #8f7f00;
+	background-color: #5C6F68;
 	width: 93.5%;
 	height: 52.5%;
 	left: 3%;
